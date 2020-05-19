@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/jfbramlett/go-template/workflows/Go/badge.svg)](https://github.com/jfbramlett/go-template/actions)
+[![Actions Status](https://github.com/jfbramlett/nwp-platform-go/workflows/Go/badge.svg)](https://github.com/jfbramlett/nwp-platform-go/actions)
 
 # Go-Template
 This project is a template project for new Go projects. The project generates a web server for serving JSON data.

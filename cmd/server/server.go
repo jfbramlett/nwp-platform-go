@@ -7,7 +7,7 @@ import (
 	"github.com/jfbramlett/go-aop/pkg/logging"
 	"github.com/jfbramlett/go-aop/pkg/metrics"
 	"github.com/jfbramlett/go-aop/pkg/tracing"
-	server "github.com/jfbramlett/go-template/pkg/api"
+	server "github.com/jfbramlett/nwp-platform-go/pkg/api"
 	"github.com/spf13/cobra"
 )
 

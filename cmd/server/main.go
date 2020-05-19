@@ -22,8 +22,8 @@ var (
 
 // rootCmd is the root command for the app.
 var rootCmd = &cobra.Command{
-	Use:   "go-template",
-	Short: "go-template service",
+	Use:   "nwp-platform-go",
+	Short: "nwp-platform-go service",
 }
 
 // Execute rootCmd.

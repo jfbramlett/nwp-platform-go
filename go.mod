@@ -1,4 +1,4 @@
-module github.com/jfbramlett/go-template
+module github.com/jfbramlett/nwp-platform-go
 
 go 1.12
 
