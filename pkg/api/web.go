@@ -4,12 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/jfbramlett/go-aop/pkg/aop"
-	"github.com/jfbramlett/go-aop/pkg/web"
 	"html/template"
 	"net/http"
 	"path"
+
+	"github.com/jfbramlett/nwp-platform-go/pkg/eel"
+
+	"github.com/gorilla/mux"
+	"github.com/jfbramlett/go-aop/pkg/aop"
+	"github.com/jfbramlett/go-aop/pkg/web"
+	"github.com/jfbramlett/nwp-platform-go/pkg/protocols/dda10"
 )
 
 var (
@@ -33,11 +37,12 @@ type Runner interface {
 }
 
 func NewWebRunner(webRoot string) Runner {
-	return &webRunner{webRoot: webRoot}
+	return &webRunner{webRoot: webRoot, dda10Handler: dda10.NewDDA10Handler(eel.NewEELHandler())}
 }
 
 type webRunner struct {
-	webRoot string
+	webRoot      string
+	dda10Handler *dda10.DDA10Handler
 }
 
 func (wr *webRunner) Run() {
@@ -47,13 +52,14 @@ func (wr *webRunner) Run() {
 	// set up HTTP sequence
 	router := mux.NewRouter()
 	router.HandleFunc("/", wr.indexHandler)
-	router.HandleFunc("/endpoint", wr.getMessage)
+	router.HandleFunc("/dda10/accountlist", wr.dda10AccountListHandler)
 
 	loggingMiddleware := &web.LoggingMiddleware{}
 	spanMiddleware := &web.SpanMiddleware{}
 	router.Use(loggingMiddleware.Middleware)
 	router.Use(spanMiddleware.Middleware)
 
+	fmt.Println("Service listening on port 8085")
 	fmt.Println(http.ListenAndServe(":8085", router))
 }
 
@@ -63,14 +69,18 @@ func (wr *webRunner) indexHandler(w http.ResponseWriter, r *http.Request) {
 	_ = homeTpl.Execute(w, webResp)
 }
 
-func (wr *webRunner) getMessage(w http.ResponseWriter, r *http.Request) {
+func (wr *webRunner) dda10AccountListHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
-
 	ctx := aop.Before(context.Background())
 	defer func() { aop.After(ctx, err) }()
 
 	if r.Method == http.MethodGet {
-		writeResponse(map[string]string{"msg": "hello world"}, http.StatusOK, w)
+		resp, err := wr.dda10Handler.GetAccountList(ctx, dda10.NewDDA10AccountListRequest("23", "1111"))
+		if err == nil {
+			writeResponse(resp, http.StatusOK, w)
+		} else {
+			writeResponse(map[string]string{"error": err.Error()}, http.StatusBadRequest, w)
+		}
 		return
 	}
 

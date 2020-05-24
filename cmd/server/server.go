@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/jfbramlett/go-aop/pkg/aop"
 	"github.com/jfbramlett/go-aop/pkg/logging"
 	"github.com/jfbramlett/go-aop/pkg/metrics"
@@ -48,7 +49,7 @@ func serve(cmd *cobra.Command, args []string) {
 	}
 
 	aop.InitAOP(service)
-	aop.RegisterJoinPoint(aop.NewRegexPointcut(".*"), aop.NewSpanFuncAdvice())
+	//aop.RegisterJoinPoint(aop.NewRegexPointcut(".*"), aop.NewSpanFuncAdvice())
 	aop.RegisterJoinPoint(aop.NewRegexPointcut(".*"), aop.NewTimedFuncAdvice(service, fmt.Sprintf("%s metrics", service)))
 	aop.RegisterJoinPoint(aop.NewRegexPointcut(".*"), aop.NewLoggingFuncAdvice())
 
