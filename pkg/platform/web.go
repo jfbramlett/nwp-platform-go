@@ -1,4 +1,4 @@
-package server
+package platform
 
 import (
 	"context"
@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/jfbramlett/nwp-platform-go/pkg/eel"
+	eel2 "github.com/jfbramlett/nwp-platform-go/pkg/platform/eelserver"
 
 	"github.com/gorilla/mux"
 	"github.com/jfbramlett/go-aop/pkg/aop"
 	"github.com/jfbramlett/go-aop/pkg/web"
-	"github.com/jfbramlett/nwp-platform-go/pkg/protocols/dda10"
+	"github.com/jfbramlett/nwp-platform-go/pkg/platform/protocols/dda10"
 )
 
 var (
@@ -37,7 +37,7 @@ type Runner interface {
 }
 
 func NewWebRunner(webRoot string) Runner {
-	return &webRunner{webRoot: webRoot, dda10Handler: dda10.NewDDA10Handler(eel.NewEELHandler())}
+	return &webRunner{webRoot: webRoot, dda10Handler: dda10.NewDDA10Handler(eel2.NewEELHandler())}
 }
 
 type webRunner struct {
