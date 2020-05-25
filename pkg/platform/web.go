@@ -1,7 +1,6 @@
 package platform
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -56,6 +55,8 @@ func (wr *webRunner) Run() {
 
 	loggingMiddleware := &web.LoggingMiddleware{}
 	spanMiddleware := &web.SpanMiddleware{}
+	traceMiddleware := &web.TracingMiddleware{}
+	router.Use(traceMiddleware.Middleware)
 	router.Use(loggingMiddleware.Middleware)
 	router.Use(spanMiddleware.Middleware)
 
@@ -71,7 +72,7 @@ func (wr *webRunner) indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func (wr *webRunner) dda10AccountListHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
-	ctx := aop.Before(context.Background())
+	ctx := aop.Before(r.Context())
 	defer func() { aop.After(ctx, err) }()
 
 	if r.Method == http.MethodGet {

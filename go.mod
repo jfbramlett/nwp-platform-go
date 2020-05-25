@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/gorilla/mux v1.7.3
-	github.com/jfbramlett/go-aop v0.0.0-20200209214622-522817f159ac
+	github.com/jfbramlett/go-aop v0.0.0-20200525223635-6c27e5fc4756
 	github.com/prometheus/client_golang v1.0.0 // indirect
 	github.com/spf13/cobra v0.0.5
 	golang.org/x/sys v0.0.0-20190616124812-15dcb6c0061f // indirect

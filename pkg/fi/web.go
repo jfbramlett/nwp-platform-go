@@ -1,7 +1,6 @@
 package fi
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -44,6 +43,8 @@ func (wr *webRunner) Run() {
 
 	loggingMiddleware := &web.LoggingMiddleware{}
 	spanMiddleware := &web.SpanMiddleware{}
+	traceMiddleware := &web.TracingMiddleware{}
+	router.Use(traceMiddleware.Middleware)
 	router.Use(loggingMiddleware.Middleware)
 	router.Use(spanMiddleware.Middleware)
 
@@ -53,7 +54,7 @@ func (wr *webRunner) Run() {
 
 func (wr *webRunner) accountListHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
-	ctx := aop.Before(context.Background())
+	ctx := aop.Before(r.Context())
 	defer func() { aop.After(ctx, err) }()
 
 	if r.Method == http.MethodGet {
