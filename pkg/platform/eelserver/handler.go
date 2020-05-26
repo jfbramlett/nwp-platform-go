@@ -21,6 +21,6 @@ func (e *EELHandler) GetAccountList(ctx context.Context, req *eelmodel.AccountLi
 	defer func() { aop.After(aspectCtx, err) }()
 
 	resp = &eelmodel.AccountListResponse{}
-	err = rest.HttpGetRequest(aspectCtx, "http://localhost:8090/accountlist", &resp)
+	err = rest.GetRequest(aspectCtx, "http://localhost:8090/accountlist", &resp)
 	return resp, err
 }

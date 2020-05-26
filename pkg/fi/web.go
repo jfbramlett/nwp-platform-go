@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/jfbramlett/go-aop/pkg/rest"
+
 	"github.com/jfbramlett/nwp-platform-go/pkg/eelmodel"
 
 	"github.com/gorilla/mux"
@@ -47,6 +49,10 @@ func (wr *webRunner) Run() {
 	router.Use(traceMiddleware.Middleware)
 	router.Use(loggingMiddleware.Middleware)
 	router.Use(spanMiddleware.Middleware)
+
+	rest.InitRestClient()
+	rest.AddRequestProxy(rest.NewTraceRequestProxy())
+	rest.AddRequestProxy(rest.NewLoggingRequestProxy())
 
 	fmt.Println("Service listening on port 8090")
 	fmt.Println(http.ListenAndServe(":8090", router))
